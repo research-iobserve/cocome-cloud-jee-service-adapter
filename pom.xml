@@ -31,7 +31,6 @@
 		<javaee-api-version>6.0</javaee-api-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit-version>4.12</junit-version>
-		<glassfish-plugin-version>2.1</glassfish-plugin-version>
 		<jboss-javaee-version>3.0.3.Final</jboss-javaee-version>
 		<log4j-version>2.1</log4j-version>
 		<mockito-version>2.0.28-beta</mockito-version>
@@ -210,12 +209,6 @@
 						<version>${ear-spec-version}</version>
 						<defaultLibBundleDir>lib</defaultLibBundleDir>
 					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.glassfish.maven.plugin</groupId>
-					<artifactId>maven-glassfish-plugin</artifactId>
-					<version>${glassfish-plugin-version}</version>
 				</plugin>
 
 				<plugin>

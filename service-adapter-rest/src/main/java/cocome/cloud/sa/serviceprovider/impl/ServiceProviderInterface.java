@@ -18,7 +18,7 @@ import cocome.cloud.sa.serviceprovider.ServiceProvider;
 import cocome.cloud.sa.serviceprovider.ServiceProviderCatalog;
 import cocome.cloud.sa.serviceprovider.ServiceProviderObjectFactory;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 import de.kit.ipd.java.utils.io.Utilities;
 import de.kit.ipd.java.utils.xml.JAXBEngine;
@@ -31,7 +31,7 @@ public class ServiceProviderInterface extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final String pathTypesSchema = "/WEB-INF/schemas/types.xsd";
+	private static final String PATH_TYPES_SCHEMA = "/WEB-INF/schemas/types.xsd";
 	
 	public static final String URL_SERVICE_BASE = "/Services";
        
@@ -115,7 +115,7 @@ public class ServiceProviderInterface extends HttpServlet {
     
 	private String getSchema(){
 		ServletContext ctx = getServletContext();
-		InputStream inputSchema = ctx.getResourceAsStream(pathTypesSchema);
+		InputStream inputSchema = ctx.getResourceAsStream(PATH_TYPES_SCHEMA);
 		String schema = Utilities.getString(inputSchema); //TODO do later
 		return schema;
 	}

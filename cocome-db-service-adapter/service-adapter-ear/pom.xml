@@ -25,21 +25,6 @@
 			<version>1.1</version>
 			<type>war</type>
 		</dependency>
-<!--		<dependency>
-			<groupId>net.kieker-monitoring</groupId>
-			<artifactId>kieker</artifactId>
-			<version>1.12</version>
-		</dependency>
- 		<dependency>
-			<groupId>org.iobserve</groupId>
-			<artifactId>monitoring</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.iobserve</groupId>
-			<artifactId>common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -81,7 +66,6 @@
 						<id>gf-undeploy</id>
 						<goals>
 							<goal>undeploy</goal>
-							<goal>stop-domain</goal>
 						</goals>
 						<phase>clean</phase>
 					</execution>
