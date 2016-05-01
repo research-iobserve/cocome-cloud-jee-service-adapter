@@ -85,14 +85,14 @@
 						<goals>
 							<goal>undeploy</goal>
 						</goals>
-						<phase>clean</phase>
+						<phase>post-clean</phase>
 					</execution>
 					<execution>
 						<id>gf-deploy</id>
 						<goals>
 							<goal>deploy</goal>
 						</goals>
-						<phase>package</phase>
+						<phase>install</phase>
 					</execution>
 				</executions>
 			</plugin>
