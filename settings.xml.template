@@ -8,8 +8,6 @@
 			<id>cocome-context</id>
 			<properties>
 				<!-- deployment properties -->
-				<local.glassfish.passwordfile></local.glassfish.passwordfile>
-				<local.glassfish.home>/home/rju/glassfish4/glassfish/</local.glassfish.home>
 
 				<!-- logic node deployment configuration -->
 				<serviceadapter.protocol>http</serviceadapter.protocol>
@@ -18,9 +16,7 @@
 				<serviceadapter.httpPort>8080</serviceadapter.httpPort>
 				<serviceadapter.adminPort>4848</serviceadapter.adminPort>
 				<serviceadapter.user>admin</serviceadapter.user>
-				<!-- Hint: If no password is set for a domain, a password file is needed -->
 				<serviceadapter.password>admin</serviceadapter.password>
-				<!-- <adapter.passwordFile>${local.glassfish.passwordfile}</logic.registry.passwordFile> -->
 			</properties>
 		</profile>
 	</profiles>
