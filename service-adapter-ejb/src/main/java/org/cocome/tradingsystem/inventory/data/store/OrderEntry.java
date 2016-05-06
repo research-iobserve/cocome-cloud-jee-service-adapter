@@ -29,11 +29,11 @@ import org.cocome.tradingsystem.inventory.data.enterprise.Product;
 
 /**
  * Represents a single product order entry in the database.
- * 
+ *
  * @author Yannick Welsch
  */
 @Entity
-public class OrderEntry implements Serializable{
+public class OrderEntry implements Serializable {
 
 	private static final long serialVersionUID = -7683436740437770058L;
 
@@ -43,24 +43,25 @@ public class OrderEntry implements Serializable{
 
 	private Product product;
 
-	private ProductOrder productOrder;
+	private ProductOrder order;
 
-	//
+	/** Empty constructor. */
+	public OrderEntry() {}
 
 	/**
 	 * Gets identifier value
-	 * 
+	 *
 	 * @return The id.
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	/**
 	 * Sets identifier.
-	 * 
+	 *
 	 * @param id
 	 *            Identifier value.
 	 */
@@ -73,7 +74,7 @@ public class OrderEntry implements Serializable{
 	 */
 	@Basic
 	public long getAmount() {
-		return amount;
+		return this.amount;
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class OrderEntry implements Serializable{
 	 */
 	@ManyToOne
 	public ProductOrder getOrder() {
-		return productOrder;
+		return this.order;
 	}
 
 	/**
@@ -97,7 +98,7 @@ public class OrderEntry implements Serializable{
 	 *            The ProductOrder where the OrderEntry belongs to
 	 */
 	public void setOrder(final ProductOrder productOrder) {
-		this.productOrder = productOrder;
+		this.order = productOrder;
 	}
 
 	/**
@@ -105,7 +106,7 @@ public class OrderEntry implements Serializable{
 	 */
 	@ManyToOne
 	public Product getProduct() {
-		return product;
+		return this.product;
 	}
 
 	/**
@@ -118,8 +119,8 @@ public class OrderEntry implements Serializable{
 
 	@Override
 	public String toString() {
-		return "[Class:" + getClass().getSimpleName() + ",Id" + getId()
-				+ ",Product:" + product + ",ProductOrder:" + productOrder + "]";
+		return "[Class:" + this.getClass().getSimpleName() + ",Id" + this.getId()
+				+ ",Product:" + this.product + ",ProductOrder:" + this.order + "]";
 	}
-	
+
 }

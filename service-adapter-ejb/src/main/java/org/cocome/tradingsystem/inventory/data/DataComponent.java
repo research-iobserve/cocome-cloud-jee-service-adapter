@@ -29,28 +29,32 @@ import org.cocome.tradingsystem.inventory.data.store.StoreQueryProvider;
  * @author Yannick Welsch
  */
 final class DataComponent implements IData {
-	
+
+	private EntityManagerFactory emf = null;
+
 	public DataComponent() {}
-	public DataComponent(EntityManagerFactory emf){
-		__emf = emf;
+
+	public DataComponent(final EntityManagerFactory emf) {
+		this.emf = emf;
 	}
-	
-	private EntityManagerFactory __emf = null;
-	
-	//not using since we get the emf per injection from the ejb-container
-//	private EntityManagerFactory __emf =
-//			javax.persistence.Persistence.createEntityManagerFactory(EJB_PERSISTENCE_UNIT_NAME);
+
+	// not using since we get the emf per injection from the ejb-container
+	// private EntityManagerFactory __emf =
+	// javax.persistence.Persistence.createEntityManagerFactory(EJB_PERSISTENCE_UNIT_NAME);
 
 	//
 
+	@Override
 	public IPersistence getPersistenceManager() {
-		return new EntityPersistence(__emf);
+		return new EntityPersistence(this.emf);
 	}
 
+	@Override
 	public IEnterpriseQuery getEnterpriseQuery() {
 		return new EnterpriseQueryProvider();
 	}
 
+	@Override
 	public IStoreQuery getStoreQuery() {
 		return new StoreQueryProvider();
 	}

@@ -21,7 +21,6 @@ import java.util.Collection;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,37 +39,38 @@ import org.cocome.tradingsystem.inventory.data.enterprise.TradingEnterprise;
 
 /**
  * Represents a store in the database.
- * 
+ *
  * @author Yannick Welsch
  */
 @Entity
 @XmlRootElement(name = "Store")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Store", propOrder = { "name", "location","enterprise"})
-public class Store implements Serializable, Comparable<Store>{
+@XmlType(name = "Store", propOrder = { "name", "location", "enterprise" })
+public class Store implements Serializable, Comparable<Store> {
 
 	@XmlTransient
 	private static final long serialVersionUID = 1L;
-	
+
 	@XmlTransient
 	private long id;
-	
-	@XmlElement(name="Name")
+
+	@XmlElement(name = "Name")
 	private String name;
-	
-	@XmlElement(name="Location")
+
+	@XmlElement(name = "Location")
 	private String location;
-	
-	@XmlElement(name="Enterprise")
+
+	@XmlElement(name = "Enterprise")
 	private TradingEnterprise enterprise;
-	
+
 	@XmlTransient
 	private Collection<ProductOrder> productOrders;
-	
+
 	@XmlTransient
 	private Collection<StockItem> stockItems;
 
-	//
+	/** Empty constructor. */
+	public Store() {}
 
 	/**
 	 * @return A unique identifier for Store objects
@@ -91,7 +91,7 @@ public class Store implements Serializable, Comparable<Store>{
 
 	/**
 	 * Returns the name of the store.
-	 * 
+	 *
 	 * @return Store name.
 	 */
 	@Basic
@@ -109,7 +109,7 @@ public class Store implements Serializable, Comparable<Store>{
 
 	/**
 	 * Returns the location of the store.
-	 * 
+	 *
 	 * @return Store location.
 	 */
 	@Basic
@@ -119,7 +119,7 @@ public class Store implements Serializable, Comparable<Store>{
 
 	/**
 	 * Sets the location of the store.
-	 * 
+	 *
 	 * @param location
 	 *            store location
 	 */
@@ -161,7 +161,7 @@ public class Store implements Serializable, Comparable<Store>{
 
 	/**
 	 * @return
-	 *         A list of StockItem objects. A StockItem represents a concrete
+	 * 		A list of StockItem objects. A StockItem represents a concrete
 	 *         product in the store including sales price, ...
 	 */
 	@OneToMany(mappedBy = "store", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -178,20 +178,17 @@ public class Store implements Serializable, Comparable<Store>{
 		this.stockItems = stockItems;
 	}
 
-	
 	@Override
 	public String toString() {
-		return "[Id:"+getId()+",Name:"+this.getName()+",Location:"+this.getLocation()+"]";
+		return "[Id:" + this.getId() + ",Name:" + this.getName() + ",Location:" + this.getLocation() + "]";
 	}
 
 	@Override
-	public int compareTo(Store o) {
-		if(this.getEnterprise().getName().equals(o.getEnterprise().getName())
+	public int compareTo(final Store o) {
+		if (this.getEnterprise().getName().equals(o.getEnterprise().getName())
 				&& this.getName().equals(o.getName())
-				&& this.getLocation().equals(o.getLocation())
-				){
+				&& this.getLocation().equals(o.getLocation()))
 			return 0;
-		}
-		return 1;	
+		return 1;
 	}
 }

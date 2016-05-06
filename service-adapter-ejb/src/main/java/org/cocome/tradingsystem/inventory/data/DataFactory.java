@@ -16,17 +16,16 @@
 
 package org.cocome.tradingsystem.inventory.data;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  * Factory for creating the Data component.
- * 
+ *
  * @author Yannick Welsch
  */
 public final class DataFactory {
 
-	private static IData __dataSingleton = null;
+	private static IData dataSingleton = null;
 
 	//
 
@@ -37,21 +36,20 @@ public final class DataFactory {
 	/**
 	 * @return A data access component implementing the {@link IData} interface.
 	 */
-	synchronized public static IData getInstance() {
-		if (__dataSingleton == null) {
-			__dataSingleton = new DataComponent();
+	public static synchronized IData getInstance() {
+		if (dataSingleton == null) {
+			dataSingleton = new DataComponent();
 		}
 
-		return __dataSingleton;
+		return dataSingleton;
 	}
-	
-	synchronized public static IData getInstance(EntityManagerFactory emf) {
-		if (__dataSingleton == null) {
-			__dataSingleton = new DataComponent(emf);
+
+	public static synchronized IData getInstance(final EntityManagerFactory emf) {
+		if (dataSingleton == null) {
+			dataSingleton = new DataComponent(emf);
 		}
 
-		return __dataSingleton;
+		return dataSingleton;
 	}
-	
 
 }

@@ -30,11 +30,11 @@ import org.cocome.tradingsystem.inventory.data.enterprise.Product;
 /**
  * Represents a concrete product in the, store including sales price,
  * amount, ...
- * 
+ *
  * @author Yannick Welsch
  */
 @Entity
-public class StockItem implements Serializable{
+public class StockItem implements Serializable {
 
 	private static final long serialVersionUID = -293179135307588628L;
 	private long id;
@@ -46,7 +46,8 @@ public class StockItem implements Serializable{
 	private Store store;
 	private Product product;
 
-	//
+	/** Empty constructor. */
+	public StockItem() {}
 
 	/**
 	 * @return A unique identifier of this StockItem.
@@ -54,7 +55,7 @@ public class StockItem implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class StockItem implements Serializable{
 	 */
 	@Basic
 	public long getAmount() {
-		return amount;
+		return this.amount;
 	}
 
 	/**
@@ -83,18 +84,18 @@ public class StockItem implements Serializable{
 
 	/**
 	 * This method will be used while computing the low stock item list.
-	 * 
+	 *
 	 * @return The maximum capacity of a product in a store.
 	 */
 	@Basic
 	public long getMaxStock() {
-		return maxStock;
+		return this.maxStock;
 	}
 
 	/**
 	 * This method enables the definition of the maximum capacity of a product
 	 * in a store.
-	 * 
+	 *
 	 * @param maxStock
 	 *            the maximum capacity of a product in a store
 	 */
@@ -104,12 +105,12 @@ public class StockItem implements Serializable{
 
 	/**
 	 * @return
-	 *         The minimum amount of products which has to be available in a
+	 * 		The minimum amount of products which has to be available in a
 	 *         store.
 	 */
 	@Basic
 	public long getMinStock() {
-		return minStock;
+		return this.minStock;
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class StockItem implements Serializable{
 	 */
 	@ManyToOne
 	public Product getProduct() {
-		return product;
+		return this.product;
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class StockItem implements Serializable{
 	 */
 	@Basic
 	public double getSalesPrice() {
-		return salesPrice;
+		return this.salesPrice;
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class StockItem implements Serializable{
 
 	/**
 	 * Required for UC 8
-	 * 
+	 *
 	 * @return incomingAmount
 	 *         the amount of products that will be delivered in the near future
 	 */
@@ -168,7 +169,7 @@ public class StockItem implements Serializable{
 	 * Set the amount of products that will be delivered in the near future.
 	 * <p>
 	 * Required for UC 8
-	 * 
+	 *
 	 * @param incomingAmount
 	 *            the absolute amount (no delta) of incoming products
 	 */
@@ -181,7 +182,7 @@ public class StockItem implements Serializable{
 	 */
 	@ManyToOne
 	public Store getStore() {
-		return store;
+		return this.store;
 	}
 
 	/**
@@ -191,10 +192,10 @@ public class StockItem implements Serializable{
 	public void setStore(final Store store) {
 		this.store = store;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[Class:"+getClass().getSimpleName()+",Id"+getId()+ ",Store:"+this.getStore()+",Product:"+this.getProduct()+"]";
+		return "[Class:" + this.getClass().getSimpleName() + ",Id" + this.getId() + ",Store:" + this.getStore() + ",Product:" + this.getProduct() + "]";
 	}
 
 }

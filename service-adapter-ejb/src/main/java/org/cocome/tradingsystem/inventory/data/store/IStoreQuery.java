@@ -30,7 +30,7 @@ import org.cocome.tradingsystem.inventory.data.persistence.IPersistenceContext;
  * This interface provides methods for querying the database. The interface will
  * be used by the InventoryApplication. The methods are derived from methods
  * defined in {@link IStoreInventoryManager} and {@link IStoreInventory}.
- * 
+ *
  * @author Yannick Welsch
  * @author Lubomir Bulej
  */
@@ -42,7 +42,7 @@ public interface IStoreQuery {
 
 	/**
 	 * Queries the database for a {@link Store} entity with given name and location.
-	 * 
+	 *
 	 * @param name
 	 *            store name
 	 * @param location
@@ -50,24 +50,25 @@ public interface IStoreQuery {
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         {@link Store} entity or {@code null} if there is no store with
+	 * 		{@link Store} entity or {@code null} if there is no store with
 	 *         the given name and location.
-	 * 
+	 *
 	 * @throws NonUniqueResultException
 	 *             if more than one store matches the given name and location
 	 */
+	// TODO if it throws something, why is it not part of the interface?
 	Store queryStore(String name, String location, IPersistenceContext pctx);
 
 	/**
 	 * Returns a {@link Store} entity corresponding to the given unique identifier.
-	 * 
+	 *
 	 * @param storeId
 	 *            unique identifier of a {@link Store} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         {@link Store} entity
-	 * 
+	 * 		{@link Store} entity
+	 *
 	 * @throws EntityNotFoundException
 	 *             if a store with the given id could not be found
 	 */
@@ -75,14 +76,14 @@ public interface IStoreQuery {
 
 	/**
 	 * Returns a {@link StockItem} entity corresponding to the given unique identifier.
-	 * 
+	 *
 	 * @param stockItemId
 	 *            unique identifier of a {@link StockItem} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         {@link StockItem} entity
-	 * 
+	 * 		{@link StockItem} entity
+	 *
 	 * @throws EntityNotFoundException
 	 *             if a stock item with the given id could not be found
 	 */
@@ -90,14 +91,14 @@ public interface IStoreQuery {
 
 	/**
 	 * Returns a {@link Product} entity corresponding to the given unique identifier.
-	 * 
+	 *
 	 * @param productId
 	 *            unique identifier of a {@link Product} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         {@link Product} entity
-	 * 
+	 * 		{@link Product} entity
+	 *
 	 * @throws EntityNotFoundException
 	 *             if a product with the given id could not be found
 	 */
@@ -105,13 +106,13 @@ public interface IStoreQuery {
 
 	/**
 	 * Queries the database for a {@link Product} entity with given barcode.
-	 * 
+	 *
 	 * @param barcode
 	 *            barcode of the product to find
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         {@link Product} entity with the specified barcode, or {@code null} if there is no such product.
+	 * 		{@link Product} entity with the specified barcode, or {@code null} if there is no such product.
 	 */
 	Product queryProduct(long barcode, IPersistenceContext pctx);
 
@@ -120,14 +121,14 @@ public interface IStoreQuery {
 	 * <p>
 	 * The following methods from StoreIf use this method: List<ComplexOrderTO> orderProducts(ComplexOrderTO complexOrder, StoreTO storeTO); ComplexOrderTO
 	 * getOrder(int orderId); void rollInReceivedOrder(ComplexOrderTO complexOrder, StoreTO store);
-	 * 
+	 *
 	 * @param orderId
 	 *            unique identifier of a {@link ProductOrder} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         An instance of {@link ProductOrder} with the specified id.
-	 * 
+	 * 		An instance of {@link ProductOrder} with the specified id.
+	 *
 	 * @throws EntityNotFoundException
 	 *             if a product order with the given id could not be found
 	 */
@@ -140,50 +141,50 @@ public interface IStoreQuery {
 	/**
 	 * Queries the specified store for all the products it carries, i.e.
 	 * products for which there is a stock item.
-	 * 
+	 *
 	 * @param storeId
 	 *            unique identifier of a {@link Store} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         A collection of products carried by the given store.
+	 * 		A collection of products carried by the given store.
 	 */
 	Collection<Product> queryProducts(long storeId, IPersistenceContext pctx);
 
 	/**
 	 * Queries the specified store for all outstanding product orders, i.e.
 	 * product orders which do not have their delivery date set.
-	 * 
+	 *
 	 * @param storeId
 	 *            unique identifier of a {@link Store} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         A collection of outstanding product orders in the specified store.
+	 * 		A collection of outstanding product orders in the specified store.
 	 */
 	Collection<ProductOrder> queryOutstandingOrders(long storeId, IPersistenceContext pctx);
 
 	/**
 	 * Queries a store for all its stock items.
-	 * 
+	 *
 	 * @param storeId
 	 *            unique identifier of a {@link Store} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         A collection of {@link StockItem} entities.
+	 * 		A collection of {@link StockItem} entities.
 	 */
 	Collection<StockItem> queryAllStockItems(long storeId, IPersistenceContext pctx);
 
 	/**
 	 * Queries a given store for all stock items with low stock.
-	 * 
+	 *
 	 * @param storeId
 	 *            unique identifier of a {@link Store} entity
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         A collection of {@link StockItem} entities objects representing
+	 * 		A collection of {@link StockItem} entities objects representing
 	 *         low stock products in the given store.
 	 */
 	Collection<StockItem> queryLowStockItems(long storeId, IPersistenceContext pctx);
@@ -191,7 +192,7 @@ public interface IStoreQuery {
 	/**
 	 * Queries the specified store for a stock item associated with product
 	 * identified by specified barcode.
-	 * 
+	 *
 	 * @param storeId
 	 *            unique identifier of a {@link Store} entity
 	 * @param productBarcode
@@ -199,12 +200,11 @@ public interface IStoreQuery {
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         The StockItem from the given store for a product with the given
+	 * 		The StockItem from the given store for a product with the given
 	 *         barcode, or {@code null} if the stock item could not be found.
 	 */
 	StockItem queryStockItem(
-			long storeId, long productBarcode, IPersistenceContext pctx
-			);
+			long storeId, long productBarcode, IPersistenceContext pctx);
 
 	/**
 	 * @author SDQ Returns the stock for the given productIds.
@@ -215,10 +215,9 @@ public interface IStoreQuery {
 	 * @param pctx
 	 *            the persistence context
 	 * @return
-	 *         The products as StockItems (including amounts)
+	 * 		The products as StockItems (including amounts)
 	 */
 	Collection<StockItem> queryStockItemsByProductId(
-			long storeId, long[] productIds, IPersistenceContext pctx
-			);
+			long storeId, long[] productIds, IPersistenceContext pctx);
 
 }

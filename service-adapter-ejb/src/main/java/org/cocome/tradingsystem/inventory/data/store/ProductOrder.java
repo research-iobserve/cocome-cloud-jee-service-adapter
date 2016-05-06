@@ -34,11 +34,11 @@ import javax.persistence.TemporalType;
 
 /**
  * The ProductOrder class represents an ProductOrder of a Store in the database.
- * 
+ *
  * @author Yannick Welsch
  */
 @Entity
-public class ProductOrder implements Serializable{
+public class ProductOrder implements Serializable {
 
 	private static final long serialVersionUID = -8340585715760459030L;
 
@@ -48,7 +48,8 @@ public class ProductOrder implements Serializable{
 	private Collection<OrderEntry> orderEntries;
 	private Store store;
 
-	//
+	/** Cechkstyle basic constructor. */
+	public ProductOrder() {}
 
 	/**
 	 * @return A unique identifier for ProductOrder objects
@@ -56,14 +57,14 @@ public class ProductOrder implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	/**
 	 * @param id
 	 *            A unique identifier for ProductOrder objects
 	 */
-	public void setId(long id) {
+	public void setId(final long id) {
 		this.id = id;
 	}
 
@@ -72,7 +73,7 @@ public class ProductOrder implements Serializable{
 	 */
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public Collection<OrderEntry> getOrderEntries() {
-		return orderEntries;
+		return this.orderEntries;
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class ProductOrder implements Serializable{
 	@Basic
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getOrderingDate() {
-		return orderingDate;
+		return this.orderingDate;
 	}
 
 	/**
@@ -102,18 +103,18 @@ public class ProductOrder implements Serializable{
 
 	/**
 	 * The delivery date is used for computing the mean time to delivery
-	 * 
+	 *
 	 * @return The date of order fulfillment.
 	 */
 	@Basic
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getDeliveryDate() {
-		return deliveryDate;
+		return this.deliveryDate;
 	}
 
 	/**
 	 * The delivery date is used for computing the mean time to delivery
-	 * 
+	 *
 	 * @param deliveryDate
 	 *            the date of order fulfillment
 	 */
@@ -126,7 +127,7 @@ public class ProductOrder implements Serializable{
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public Store getStore() {
-		return store;
+		return this.store;
 	}
 
 	/**
@@ -136,10 +137,10 @@ public class ProductOrder implements Serializable{
 	public void setStore(final Store store) {
 		this.store = store;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[Class:"+getClass().getSimpleName()+",Id:"+getId()+",Store:"+getStore() +"]";
+		return "[Class:" + this.getClass().getSimpleName() + ",Id:" + this.getId() + ",Store:" + this.getStore() + "]";
 	}
 
 }
