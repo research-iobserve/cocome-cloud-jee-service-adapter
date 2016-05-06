@@ -56,6 +56,29 @@ interface the `asadmin` command line tool or with
 
 `mvn -s settings.xml post-clean`
 
+## Development
+
+Before you start to contribute to the service-adapter make sure you
+adhere the coding style of the service-adapter and setup your IDE
+accordingly. For Eclipse, we provide configuration files in the
+root directory.
+- `eclipse-cleanup.xml` 
+- `eclipse-formatter.xml`
+- `eclipse.importorder`
+You can use them globally in preferences or configure them in each
+project. 
+
+Furthermore, we provide a `checkstyle.xml` configuration, which can
+be used with Maven and in your IDE.
+
+`mvn -s settings.xml checkstyle:check`
+
+This will produce also errors in existing code. We are aware of that
+and will fix in over time.
+
+For your Eclipse setup you may use the Kieker Eclipse setup page as
+reference (https://kieker.uni-kiel.de/trac/wiki/KiekerCodingConventionSetup)
+
 ## Troubleshooting
 
 In case the deployment fails, this might be due to a wide range of
