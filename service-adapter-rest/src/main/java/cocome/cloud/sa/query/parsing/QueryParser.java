@@ -1,6 +1,5 @@
 package cocome.cloud.sa.query.parsing;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,163 +7,158 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import cocome.cloud.sa.query.Query;
-import cocome.cloud.sa.query.SelectQuery;
-import cocome.cloud.sa.query.parsing.QueryLexer.State4;
-import cocome.cloud.sa.query.parsing.QueryLexer.State5;
-import cocome.cloud.sa.query.parsing.QueryLexer.State6;
-
 import de.kit.ipd.java.utils.framework.statemachine.ILexer;
 import de.kit.ipd.java.utils.framework.statemachine.ILexerVisitor;
 import de.kit.ipd.java.utils.framework.statemachine.IParser;
 import de.kit.ipd.java.utils.framework.statemachine.IParserVisitor;
 import de.kit.ipd.java.utils.framework.statemachine.IStateMachine;
 
+import cocome.cloud.sa.query.IQuery;
+import cocome.cloud.sa.query.SelectQuery;
+import cocome.cloud.sa.query.parsing.QueryLexer.State4;
+import cocome.cloud.sa.query.parsing.QueryLexer.State5;
+import cocome.cloud.sa.query.parsing.QueryLexer.State6;
 
 public class QueryParser implements IParser<String>, ILexerVisitor<CharSequence> {
-	
-	public static void main(String[] args) {
-		String query = "query.select=entity.type=Store;Enterprise.name=Kaufland";
-		QueryParser parser = new QueryParser();
-		parser.parse(query);
-	}
-	
-	/**************************************************************************
-	 * FIELDS
-	 *************************************************************************/
-	
+
+	// public static void main(final String[] args) {
+	// final String query = "query.select=entity.type=Store;Enterprise.name=Kaufland";
+	// final QueryParser parser = new QueryParser();
+	// parser.parse(query);
+	// }
+
+	private static final int INIT_STATE = 0;
+	private static final int EOL_STATE = 5;
+
 	private ILexer<CharSequence> lexer = new QueryLexer();
-	
-	private Map<String,String> map = new HashMap<String, String>();
-	
-	private Query query;
-	
+
+	private final Map<String, String> map = new HashMap<String, String>();
+
+	private IQuery query;
+
 	private String strQuery;
-	
-	private int INIT_STATE = 0;
-	private int EOL_STATE = 5;
-	
+
 	private String entityType;
-	
-	/**************************************************************************
-	 * CONSTRUCTOR
-	 *************************************************************************/
-	
+
+	/**
+	 * Constructor.
+	 */
 	public QueryParser() {
-		lexer.getMachine().setEOLState(EOL_STATE);
-		lexer.getMachine().addVisitor(this);
+		this.lexer.getMachine().setEOLState(QueryParser.EOL_STATE);
+		this.lexer.getMachine().addVisitor(this);
 	}
-	
-	/**************************************************************************
-	 * PUBLIC
-	 *************************************************************************/
-	
-	public String getModel() {
-		return strQuery;
-	}
-	
-	public String getEntityType() {
-		return entityType;
-	}
-	
+
 	@Override
-	public void setModel(String model) {
+	public String getModel() {
+		return this.strQuery;
+	}
+
+	public String getEntityType() {
+		return this.entityType;
+	}
+
+	@Override
+	public void setModel(final String model) {
 		this.strQuery = model;
 	}
-	
-	public void setLexer(ILexer<CharSequence> lexer){
+
+	/**
+	 * This assigns a lexer and sets the state machine on state 4.
+	 *
+	 * @param lexer
+	 *            the lexer to be set
+	 */
+	public void setLexer(final ILexer<CharSequence> lexer) {
 		this.lexer = lexer;
 		lexer.getMachine().setEOLState(4);
 		lexer.getMachine().addVisitor(this);
 	}
-	
+
 	@Override
-	public void parse(String content) {
-		lexer.getMachine().setInput(content);
-		lexer.getMachine().run(INIT_STATE);
+	public void parse(final String content) {
+		this.lexer.getMachine().setInput(content);
+		this.lexer.getMachine().run(QueryParser.INIT_STATE);
 	}
-	
+
 	@Override
-	public void parse(InputStream in) {
+	public void parse(final InputStream in) {
 		try {
-			if(in!=null && in.available()!=-1) {
-				BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			if (in != null && in.available() != -1) {
+				final BufferedReader br = new BufferedReader(new InputStreamReader(in));
 				String line = null;
-				StringBuilder content = new StringBuilder();
-				while((line=br.readLine())!=null){
+				final StringBuilder content = new StringBuilder();
+				while ((line = br.readLine()) != null) {
 					content.append(line);
 					content.append(System.lineSeparator());
 				}
-				lexer.getMachine().setInput(content);
-				lexer.getMachine().run(INIT_STATE);
+				this.lexer.getMachine().setInput(content);
+				this.lexer.getMachine().run(QueryParser.INIT_STATE);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void visit(IStateMachine<CharSequence> machine, int state, CharSequence token) {
-		String val = String.valueOf(token);
-		if(!val.isEmpty()) {
+	public void visit(final IStateMachine<CharSequence> machine, final int state, final CharSequence token) {
+		final String val = String.valueOf(token);
+		if (!val.isEmpty()) {
 			switch (state) {
 			case State6.INDEX:
-				_selectQueryClass(val);
+				this.selectQueryClass(val);
 				break;
 			case State4.INDEX:
-				if(val.toLowerCase().startsWith("entity.type")){
-					_selectEntityType(val);
-					_appendProperty(val);
+				if (val.toLowerCase().startsWith("entity.type")) {
+					this.selectEntityType(val);
+					this.appendProperty(val);
 				} else {
-					_appendProperty(val);
+					this.appendProperty(val);
 				}
 				break;
 			case State5.INDEX:
-				_appendProperty(val);
-				_buildQuery();
+				this.appendProperty(val);
+				this.buildQuery();
+				break;
+			default:
 				break;
 			}
 		}
 	}
 
 	@Override
-	public void addVisitor(IParserVisitor... visitors) {
+	public void addVisitor(final IParserVisitor... visitors) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
 		return super.toString();
 	}
 
-	/**************************************************************************
-	 * PRIVATE
-	 *************************************************************************/
-	
-	private void _selectQueryClass(String token){
-		//TODO implementation missing
+	private void selectQueryClass(final String token) {
+		// TODO implementation missing
 	}
-	
-	private void _selectEntityType(String token) {
-		entityType = token.split("=")[1].toLowerCase();
-		query = new SelectQuery();
-//		switch (val) {
-//		case "store":
-//			query = new StoreQuery2();
-//			break;
-//		default:
-//			break;
-//		}
+
+	private void selectEntityType(final String token) {
+		this.entityType = token.split("=")[1].toLowerCase();
+		this.query = new SelectQuery();
+		// switch (val) {
+		// case "store":
+		// query = new StoreQuery2();
+		// break;
+		// default:
+		// break;
+		// }
 	}
-	
-	private void _appendProperty(String token){
-		String name = token.substring(0, token.indexOf("=", 0));
-		String val = token.substring(token.indexOf("=", 0)+1, token.length());
-		map.put(name, val);
+
+	private void appendProperty(final String token) {
+		final String name = token.substring(0, token.indexOf("=", 0));
+		final String val = token.substring(token.indexOf("=", 0) + 1, token.length());
+		this.map.put(name, val);
 	}
-	
-	private void _buildQuery() {
-		strQuery = query.parse(map);
+
+	private void buildQuery() {
+		this.strQuery = this.query.parse(this.map);
 	}
 }

@@ -14,26 +14,26 @@ import de.kit.ipd.java.utils.xml.IMarshable;
 
 @XmlRootElement(name = "ServiceProviderCatalog")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name="ServiceProviderCatalog",propOrder={"listServiceProvider"})
-public class ServiceProviderCatalog implements IMarshable{
+@XmlType(name = "ServiceProviderCatalog", propOrder = { "listServiceProvider" })
+public class ServiceProviderCatalog implements IMarshable {
 
-	@XmlElementWrapper(name="ServiceProviders")
+	@XmlElementWrapper(name = "ServiceProviders")
 	@XmlElement(name = "ServiceProvider")
 	private List<ServiceProvider> listServiceProvider = new ArrayList<>();
 
 	public ServiceProviderCatalog() {}
 
-	public void setListServiceProvider(List<ServiceProvider> listServiceProvider) {
+	public void setListServiceProvider(final List<ServiceProvider> listServiceProvider) {
 		this.listServiceProvider = listServiceProvider;
 	}
 
 	public List<ServiceProvider> getListServiceProvider() {
-		return listServiceProvider;
+		return this.listServiceProvider;
 	}
-	
-	 @Override
-	    public Class<?> getObjectFactory() {
-	    	return ServiceProviderObjectFactory.class;
-	    }
+
+	@Override
+	public Class<?> getObjectFactory() {
+		return ServiceProviderObjectFactory.class;
+	}
 
 }

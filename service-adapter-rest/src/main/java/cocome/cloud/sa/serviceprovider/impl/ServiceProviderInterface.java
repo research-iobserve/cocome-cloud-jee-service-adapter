@@ -12,130 +12,121 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 
-import sun.misc.BASE64Decoder;
-
-import cocome.cloud.sa.serviceprovider.ServiceProvider;
-import cocome.cloud.sa.serviceprovider.ServiceProviderCatalog;
-import cocome.cloud.sa.serviceprovider.ServiceProviderObjectFactory;
+import org.apache.commons.codec.binary.Base64;
 
 import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 import de.kit.ipd.java.utils.io.Utilities;
 import de.kit.ipd.java.utils.xml.JAXBEngine;
 
+import cocome.cloud.sa.serviceprovider.ServiceProvider;
+import cocome.cloud.sa.serviceprovider.ServiceProviderCatalog;
+import cocome.cloud.sa.serviceprovider.ServiceProviderObjectFactory;
+
 /**
  * Provides all service provider
  */
 @WebServlet("/ServiceProviderInterface")
 public class ServiceProviderInterface extends HttpServlet {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private static final String PATH_TYPES_SCHEMA = "/WEB-INF/schemas/types.xsd";
-	
+
 	public static final String URL_SERVICE_BASE = "/Services";
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ServiceProviderInterface() {
-        super();
-    }
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String PATH_TYPES_SCHEMA = "/WEB-INF/schemas/types.xsd";
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ServiceProviderInterface() {
+		super();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    @Override
+	@Override
 	@GET
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	PrintWriter writer = response.getWriter();
-    	
-    	//TODO later..for testing purposes disabled
-//    	if(!checkUser(request,response)){
-//    		return;
-//    	}
-    	
-		String urlBase = getBaseUrl(request);
-		
-		ServiceProviderCatalog catalog = new ServiceProviderCatalog();
-		
-		ServiceProvider spDatabase = new ServiceProvider();
+	protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+		final PrintWriter writer = response.getWriter();
+
+		// TODO later..for testing purposes disabled
+		// if(!checkUser(request,response)){
+		// return;
+		// }
+
+		final String urlBase = this.getBaseUrl(request);
+
+		final ServiceProviderCatalog catalog = new ServiceProviderCatalog();
+
+		final ServiceProvider spDatabase = new ServiceProvider();
 		spDatabase.setName(ServiceProviderDatabase.NAME_SERVICE_PROVIDER_DATABASE);
-		spDatabase.setUrl(urlBase 
-				+ URL_SERVICE_BASE 
+		spDatabase.setUrl(urlBase
+				+ URL_SERVICE_BASE
 				+ ServiceProviderDatabase.URL_SERVICE_PROVIDER_DATABASE);
-		
-		ServiceProvider spCashier = new ServiceProvider();
+
+		final ServiceProvider spCashier = new ServiceProvider();
 		spCashier.setName("BookSale");
-		spCashier.setUrl(urlBase 
-				+ URL_SERVICE_BASE 
+		spCashier.setUrl(urlBase
+				+ URL_SERVICE_BASE
 				+ "/BookSale/ServiceProviderBookSale");
-		
-		
+
 		catalog.getListServiceProvider().add(spCashier);
 		catalog.getListServiceProvider().add(spDatabase);
-		
+
 		response.setContentType("text/xml");
-		
-		writer.append(getRespond(catalog));
+
+		writer.append(this.getRespond(catalog));
 		writer.close();
 	}
+
 	/*************************************************************************
 	 * PRIVATE
 	 ************************************************************************/
 
-    private boolean checkUser(HttpServletRequest request, HttpServletResponse responses){
-    	String authentification = request.getHeader("Authorization");
-    	
-    	if(authentification==null || authentification.isEmpty()
-    			|| !authentification.toUpperCase().startsWith("BASIC")
-    			){
-    		responses.setHeader("WWW-Authenticate", "Not Authorized");
-    		try {
+	private boolean checkUser(final HttpServletRequest request, final HttpServletResponse responses) {
+		final String authentification = request.getHeader("Authorization");
+
+		if (authentification == null || authentification.isEmpty()
+				|| !authentification.toUpperCase().startsWith("BASIC")) {
+			responses.setHeader("WWW-Authenticate", "Not Authorized");
+			try {
 				responses.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
-    		return false;
-    	}
-    	String userpassEncoded = authentification.substring(6);
-    	BASE64Decoder decoder = new BASE64Decoder();
-    	try {
-			String userpassDecoded = new String(decoder.decodeBuffer(userpassEncoded));
-			
-			//Check user and password are allowed
-			//TODO check the password here
-			System.out.println(userpassDecoded);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
 			return false;
 		}
-    }
-    
-	private String getSchema(){
-		ServletContext ctx = getServletContext();
-		InputStream inputSchema = ctx.getResourceAsStream(PATH_TYPES_SCHEMA);
-		String schema = Utilities.getString(inputSchema); //TODO do later
+		final String userpassEncoded = authentification.substring(6);
+		final String userpassDecoded = new String(Base64.decodeBase64(userpassEncoded));
+
+		// Check user and password are allowed
+		// TODO check the password here
+		System.out.println(userpassDecoded);
+		return true;
+	}
+
+	private String getSchema() {
+		final ServletContext ctx = this.getServletContext();
+		final InputStream inputSchema = ctx.getResourceAsStream(PATH_TYPES_SCHEMA);
+		final String schema = Utilities.getString(inputSchema); // TODO do later
 		return schema;
 	}
-	
-	
-	private String getRespond(ServiceProviderCatalog catalog){
-		JAXBEngine engine = JAXBEngine.getInstance();
-		ByteOutputStream out = new ByteOutputStream();
+
+	private String getRespond(final ServiceProviderCatalog catalog) {
+		final JAXBEngine engine = JAXBEngine.getInstance();
+		final ByteOutputStream out = new ByteOutputStream();
 		engine.write(catalog, out, ServiceProviderObjectFactory.class);
-		String strRespond = out.toString();
+		final String strRespond = out.toString();
 		out.close();
 		return strRespond;
 	}
-	
-	
-	private String getBaseUrl(HttpServletRequest request){
-		return request.getScheme() 
+
+	private String getBaseUrl(final HttpServletRequest request) {
+		return request.getScheme()
 				+ "://" + request.getServerName()
-				+ ":" + request.getServerPort() 
+				+ ":" + request.getServerPort()
 				+ request.getContextPath();
 	}
-	
+
 }

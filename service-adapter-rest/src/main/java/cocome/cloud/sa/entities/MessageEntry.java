@@ -2,61 +2,54 @@ package cocome.cloud.sa.entities;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyAttribute;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ *
+ * @author unknown
+ *
+ */
 @XmlRootElement(name = "MessageEntry")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "MessageEntry", propOrder = { "index","content"})
+@XmlType(name = "MessageEntry", propOrder = { "index", "content" })
 public class MessageEntry {
-	
-	// **********************************************************************
-	// * FIELDS																*
-	// **********************************************************************
-	
-	@XmlAttribute(name="index")
+
+	@XmlAttribute(name = "index")
 	private int index;
-	
-	@XmlAttribute(name="name")
+
+	@XmlAttribute(name = "name")
 	private String name;
-	
-	@XmlElement(name="Content")
+
+	@XmlElement(name = "Content")
 	private String content;
-	
-	// **********************************************************************
-	// * CONSTRUCTORS														*
-	// **********************************************************************
-	
+
+	/** Empty constructor. */
 	public MessageEntry() {}
-	
-	// **********************************************************************
-	// * PUBLIC																*
-	// **********************************************************************
 
 	public String getContent() {
-		return content;
+		return this.content;
 	}
 
-	public void setContent(String content) {
+	public void setContent(final String content) {
 		this.content = content;
 	}
 
 	public int getIndex() {
-		return index;
+		return this.index;
 	}
 
-	public void setIndex(int index) {
+	public void setIndex(final int index) {
 		this.index = index;
 	}
-	
+
 	public String getName() {
-		return name;
+		return this.name;
 	}
-	
-	public void setName(String name) {
+
+	public void setName(final String name) {
 		this.name = name;
 	}
 }

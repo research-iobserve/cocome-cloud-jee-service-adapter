@@ -881,7 +881,7 @@
 		<!-- See http://checkstyle.sf.net/config_naming.html ! -->
 		<module name="LocalVariableName">
 			<property name="format" value="^[a-z][a-zA-Z0-9]*$" />
-			<property name="tokens" value="PARAMETER_DEF" />
+<!-- 			<property name="tokens" value="PARAMETER_DEF" /> -->
 		</module>
 
 		<!-- Checks for member variable name naming conventions. ! -->
