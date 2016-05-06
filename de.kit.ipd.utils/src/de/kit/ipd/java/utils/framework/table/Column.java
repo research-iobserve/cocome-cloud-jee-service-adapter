@@ -9,43 +9,53 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ *
+ * @author unknown
+ *
+ * @param <T>
+ *            column element type
+ */
 @XmlRootElement(name = "Column")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Column", propOrder = { "name", "index", "value" })
 public class Column<T> implements Serializable {
 
 	private static final long serialVersionUID = -924839233083176478L;
-	
-	@XmlAttribute(name = "name",required= true)
+
+	@XmlAttribute(name = "name", required = true)
 	private String name;
 
-	@XmlAttribute(name = "index",required=true)
+	@XmlAttribute(name = "index", required = true)
 	private int index;
 
-	@XmlElement(name = "Value",required=true)
+	@XmlElement(name = "Value", required = true)
 	private T value;
 
+	/** Should be replaced by one with parameters. */
+	public Column() {}
+
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
 	public int getIndex() {
-		return index;
+		return this.index;
 	}
 
-	public void setIndex(int index) {
+	public void setIndex(final int index) {
 		this.index = index;
 	}
 
 	public T getValue() {
-		return value;
+		return this.value;
 	}
 
-	public void setValue(T value) {
+	public void setValue(final T value) {
 		this.value = value;
 	}
 

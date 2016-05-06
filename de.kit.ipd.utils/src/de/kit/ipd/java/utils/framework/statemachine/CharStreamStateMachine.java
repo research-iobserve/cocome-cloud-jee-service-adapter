@@ -1,46 +1,52 @@
 package de.kit.ipd.java.utils.framework.statemachine;
 
-
+/**
+ *
+ * @author unknown
+ *
+ */
 public class CharStreamStateMachine extends AbstractStateMachine<CharSequence> {
-	
+
 	/************************************************************************
 	 * FIELDS
 	 ***********************************************************************/
-	
+
 	private int pointer = 0;
-	
+
 	private char nextChar;
-	
-	private StringBuilder builder = new StringBuilder();
-	
+
+	private final StringBuilder builder = new StringBuilder();
+
+	/** Empty constructor, requested by checkstyle. */
+	public CharStreamStateMachine() {}
+
 	@Override
-	protected void _moveNextToken() {
-		nextChar = input.charAt(pointer);
-		pointer++;
-		if(pointer >= input.length()){
-			setMachineStopped();
+	protected void moveNextTokenInternal() {
+		this.nextChar = this.input.charAt(this.pointer);
+		this.pointer++;
+		if (this.pointer >= this.input.length()) {
+			this.setMachineStopped();
 		}
 	}
 
 	@Override
-	protected CharSequence _getToken() {
-		return builder.toString();
+	protected CharSequence getTokenInternal() {
+		return this.builder.toString();
 	}
 
 	@Override
-	protected CharSequence _appendToken(CharSequence token) {
-		return builder.append(token);
+	protected CharSequence appendTokenInternal(final CharSequence token) {
+		return this.builder.append(token);
 	}
 
 	@Override
-	protected void _resetToken() {
-		builder.delete(0, builder.length());
+	protected void resetTokenInternal() {
+		this.builder.delete(0, this.builder.length());
 	}
 
 	@Override
-	protected CharSequence _next() {
-		return String.valueOf(nextChar);
+	protected CharSequence nextInternal() {
+		return String.valueOf(this.nextChar);
 	}
-	
 
 }

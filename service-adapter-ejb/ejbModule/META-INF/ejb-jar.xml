@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd" version="3.1">
-  <display-name>service-adapter-ejb</display-name>
-  
-  <interceptors>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+	version="3.1">
+	<display-name>service-adapter-ejb</display-name>
+
+	<interceptors>
 		<description>TraceInterceptor</description>
 		<interceptor>
-			<interceptor-class>org.iobserve.monitoring.probe.j2ee.TraceInterceptor
-			</interceptor-class>
+			<interceptor-class>org.iobserve.monitoring.probe.j2ee.TraceInterceptor</interceptor-class>
 		</interceptor>
 		<interceptor>
-			<interceptor-class>org.iobserve.monitoring.probe.j2ee.DeploymentInterceptor
-			</interceptor-class>
+			<interceptor-class>org.iobserve.monitoring.probe.j2ee.DeploymentInterceptor</interceptor-class>
 			<env-entry>
 				<env-entry-name>deploymentId</env-entry-name>
 				<env-entry-type>java.lang.String</env-entry-type>
@@ -30,10 +31,8 @@
 	<assembly-descriptor>
 		<interceptor-binding>
 			<ejb-name>*</ejb-name>
-			<interceptor-class>org.iobserve.monitoring.probe.j2ee.TraceInterceptor
-			</interceptor-class>
-			<interceptor-class>org.iobserve.monitoring.probe.j2ee.DeploymentInterceptor
-			</interceptor-class>
+			<interceptor-class>org.iobserve.monitoring.probe.j2ee.TraceInterceptor</interceptor-class>
+			<interceptor-class>org.iobserve.monitoring.probe.j2ee.DeploymentInterceptor</interceptor-class>
 		</interceptor-binding>
 	</assembly-descriptor>
 </ejb-jar>

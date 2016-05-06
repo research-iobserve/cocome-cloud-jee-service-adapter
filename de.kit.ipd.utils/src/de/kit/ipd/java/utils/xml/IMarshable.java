@@ -1,7 +1,12 @@
 package de.kit.ipd.java.utils.xml;
 
-public interface Marshable {
-	
+/**
+ *
+ * @author unknown
+ *
+ */
+public interface IMarshable {
+
 	Class<?> getObjectFactory();
 
 }

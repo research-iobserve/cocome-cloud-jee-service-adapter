@@ -1,5 +1,9 @@
 **/.settings/**
 **/target/**
 **/.project
+**/.checkstyle
 settings.xml
-
+.settings/**
+.project
+target/**
+.checkstyle

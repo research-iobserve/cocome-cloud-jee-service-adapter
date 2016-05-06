@@ -5,161 +5,167 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * @author unknown
+ *
+ * @param <T>
+ *            unknown semantics of T
+ */
+public abstract class AbstractStateMachine<T> implements IStateMachine<T> {
 
-public abstract class AbstractStateMachine<T> implements StateMachine<T>{
-	
 	/************************************************************************
 	 * FIELDS
 	 ***********************************************************************/
-	
-	private State<T> currentState;
-	
-	private int eolState;
-	
-	private boolean running = false;
 
 	protected T input;
-	
-	private Map<Integer, State<T>> states = new HashMap<>();
-	
-	private List<LexerVisitor<T>> visitors = new ArrayList<LexerVisitor<T>>();
-	
+
+	private IState<T> currentState;
+
+	private int eolState;
+
+	private boolean running = false;
+
+	private final Map<Integer, IState<T>> states = new HashMap<>();
+
+	private final List<ILexerVisitor<T>> visitors = new ArrayList<ILexerVisitor<T>>();
+
 	/************************************************************************
 	 * CONSTRUCTOR
 	 ***********************************************************************/
-	
-	
-	
+
 	/************************************************************************
 	 * PUBLIC
 	 ***********************************************************************/
-	public void setEOLState(int index) {
+	@Override
+	public void setEOLState(final int index) {
 		this.eolState = index;
 	}
-	
+
 	@Override
-	public void setInput(T input) {
+	public void setInput(final T input) {
 		this.input = input;
 	}
-	
+
 	@Override
-	public void add(State<T>...states) {
-		if(states!=null){
-			for(State<T> nextState:states){
+	public void add(final IState<T>... additionalStates) {
+		if (additionalStates != null) {
+			for (final IState<T> nextState : additionalStates) {
 				this.states.put(nextState.getIndex(), nextState);
 			}
 			return;
 		}
 		throw new IllegalArgumentException("list of states empty or null");
 	}
-	
+
 	/**
-	 * Run the 
+	 * Run the
+	 *
 	 * @param init
 	 */
 	@Override
-	public void run(int state){
-		currentState = getState(state);
-		setMachineRunning();
-		while(isMachineRunning()) {
-			currentState.run(this);
+	public void run(final int state) {
+		this.currentState = this.getState(state);
+		this.setMachineRunning();
+		while (this.isMachineRunning()) {
+			this.currentState.run(this);
 		}
-		getState(eolState).run(this);
+		this.getState(this.eolState).run(this);
 	}
-	
+
 	@Override
 	public T getToken() {
-		return _getToken();
+		return this.getTokenInternal();
 	}
-	
+
 	@Override
-	public void appendToken(T token) {
-		_appendToken(token);
+	public void appendToken(final T token) {
+		this.appendTokenInternal(token);
 	}
-	
+
+	@Override
 	public void resetToken() {
-		_resetToken();
+		this.resetTokenInternal();
 	}
-	
+
 	@Override
 	public int size() {
-		return states.size();
+		return this.states.size();
 	}
 
 	@Override
 	public T getNext() {
-		_moveNextToken();
-		return _next();
+		this.moveNextTokenInternal();
+		return this.nextInternal();
 	}
-	
+
 	@Override
-	public void setNextState(State<T> s) {
+	public void setNextState(final IState<T> s) {
 		this.currentState = s;
 	}
-	
+
 	@Override
-	public void setNextState(int index) {
-		this.currentState = getState(index);
+	public void setNextState(final int index) {
+		this.currentState = this.getState(index);
 	}
-	
+
 	@Override
-	public State<T> getState(int index) {
-		return states.get(index);
+	public IState<T> getState(final int index) {
+		return this.states.get(index);
 	}
-	
+
 	@Override
-	public void addVisitor(LexerVisitor<T> visitor) {
-		if(visitor!=null){
-			for(LexerVisitor<T> nextVisitor:visitors){
-				if(nextVisitor.equals(visitor)){
+	public void addVisitor(final ILexerVisitor<T> visitor) {
+		if (visitor != null) {
+			for (final ILexerVisitor<T> nextVisitor : this.visitors) {
+				if (nextVisitor.equals(visitor))
 					return;
-				}
 			}
 			this.visitors.add(visitor);
 		}
 	}
-	
+
 	@Override
-	public void removeVisitor(LexerVisitor<T> visitor) {
-		if(visitor!=null){
+	public void removeVisitor(final ILexerVisitor<T> visitor) {
+		if (visitor != null) {
 			this.visitors.remove(visitor);
 		}
 	}
-	
+
 	@Override
-	public void callVisitor(int index, T token) {
-		for(LexerVisitor<T> nextVisitor:visitors){
+	public void callVisitor(final int index, final T token) {
+		for (final ILexerVisitor<T> nextVisitor : this.visitors) {
 			nextVisitor.visit(this, index, token);
 		}
 	}
-	
+
 	/************************************************************************
 	 * PRIVATE
 	 ***********************************************************************/
-	
+
 	protected T getInput() {
-		return input;
+		return this.input;
 	}
-	
+
 	protected void setMachineRunning() {
-		running = true;
+		this.running = true;
 	}
-	
+
 	protected void setMachineStopped() {
-		running = false;
+		this.running = false;
 	}
-	
-	protected boolean isMachineRunning(){
-		return running;
+
+	protected boolean isMachineRunning() {
+		return this.running;
 	}
-	
-	protected abstract void _moveNextToken();
-	
-	protected abstract T _getToken();
-	
-	protected abstract T _appendToken(T token);
-	
-	protected abstract void _resetToken();
-	
-	protected abstract T _next();
+
+	protected abstract void moveNextTokenInternal();
+
+	protected abstract T getTokenInternal();
+
+	protected abstract T appendTokenInternal(T token);
+
+	protected abstract void resetTokenInternal();
+
+	protected abstract T nextInternal();
 }

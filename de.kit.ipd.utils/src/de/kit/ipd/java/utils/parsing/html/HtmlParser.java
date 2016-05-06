@@ -3,64 +3,66 @@ package de.kit.ipd.java.utils.parsing.html;
 import de.kit.ipd.java.utils.framework.table.Table;
 import de.kit.ipd.java.utils.framework.table.TableHeader;
 
+/**
+ *
+ * @author unknown
+ *
+ */
 public class HtmlParser {
-	
-	
+
 	// **********************************************************************
-	// * FIELDS																*
-	// **********************************************************************
-	
-	private Table<String> table;
-	
-	// **********************************************************************
-	// * CONSTRUCTORS														*
-	// **********************************************************************
-	public HtmlParser() {}
-	
-	// **********************************************************************
-	// * PUBLIC																*
+	// * FIELDS *
 	// **********************************************************************
 
-	
-	public void setTable(Table<String> table){
+	private Table<String> table;
+
+	// **********************************************************************
+	// * CONSTRUCTORS *
+	// **********************************************************************
+	public HtmlParser() {}
+
+	// **********************************************************************
+	// * PUBLIC *
+	// **********************************************************************
+
+	public void setTable(final Table<String> table) {
 		this.table = table;
 	}
-	
-	
+
 	@Override
 	public String toString() {
-		return _generateHtml();
+		return this.generateHtml();
 	}
-	
+
 	// **********************************************************************
-	// * PRIVATE															*
+	// * PRIVATE *
 	// **********************************************************************
-	
-	private String _generateHtml(){
-		StringBuilder builder = new StringBuilder();
+
+	private String generateHtml() {
+		final StringBuilder builder = new StringBuilder();
 		builder.append("<table border=\"1\" cellspacing=\"2\" cellpadding=\"2\">");
 		builder.append("<tr>");
-		for(TableHeader nextHeader:table.getHeader()){
-			builder.append("<th>"+nextHeader.getName()+"</th>");
+		for (final TableHeader nextHeader : this.table.getHeader()) {
+			builder.append("<th>" + nextHeader.getName() + "</th>");
 		}
 		builder.append("</tr>");
 		builder.append("</table>");
 		return builder.toString();
 	}
-	
-//	<table>
-//	  <tr>
-//	    <th id="name">Name</th>
-//	    <th id="email">Email</th>
-//	    <th id="phone">Phone</th>
-//	    <th id="addr">Address</th>
-//	  </tr>
-//	  <tr>
-//	    <td headers="name">John Doe</td>
-//	    <td headers="email">someone@example.com</td>
-//	    <td headers="phone">+45342323</td>
-//	    <td headers="addr">Rosevn 56,4300 Sandnes,Norway</td>
-//	  </tr>
-//	</table> 
-	
+
+	// <table>
+	// <tr>
+	// <th id="name">Name</th>
+	// <th id="email">Email</th>
+	// <th id="phone">Phone</th>
+	// <th id="addr">Address</th>
+	// </tr>
+	// <tr>
+	// <td headers="name">John Doe</td>
+	// <td headers="email">someone@example.com</td>
+	// <td headers="phone">+45342323</td>
+	// <td headers="addr">Rosevn 56,4300 Sandnes,Norway</td>
+	// </tr>
+	// </table>
+
 }

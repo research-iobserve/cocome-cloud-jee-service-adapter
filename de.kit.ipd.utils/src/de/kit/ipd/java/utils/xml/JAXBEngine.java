@@ -26,15 +26,23 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- * A JAXB-Framework layer to persist and unpersist xml based on schema
- * 
+ * A JAXB-Framework layer to store and load xml-data based on its schema.
+ *
  * @author alessandrogiusa@gmail.com
- * 
+ *
  */
-public class JAXBEngine {
+public final class JAXBEngine {
+
+	/** instance of this class, Singleton */
+	private static JAXBEngine jaxbEngineInstance;
 
 	/** if debug, all System.out.println will be invoked */
-	boolean debug = false;
+	private boolean debug = false;
+
+	/**
+	 * Make sure this (factory) class is not instantiated.
+	 */
+	private JAXBEngine() {}
 
 	/**
 	 * Turn the debug on
@@ -51,139 +59,52 @@ public class JAXBEngine {
 	}
 
 	/**
-	 * Resolve the {@link SchemaOutputResolver}
-	 * 
-	 * @author alessandro.giusa@valeo.com, SBX1322
-	 * 
-	 */
-	private class SchemaFileResolver extends SchemaOutputResolver {
-
-		private String schemaName;
-		private String directory;
-
-		/**
-		 * Create an instance of a {@link SchemaFileResolver}
-		 * 
-		 * @param directory
-		 *            parent path of schema name
-		 * @param schemaName
-		 *            only the filename of the schema which should be created
-		 *            with the extension .xsd
-		 */
-		public SchemaFileResolver(String directory, String schemaName) {
-			super();
-			if (!schemaName.contains(".")) {
-				this.schemaName += ".xsd";
-			} else {
-				this.schemaName = schemaName;
-			}
-
-			if (directory == null || directory.isEmpty()) {
-				this.directory = ".";
-			} else {
-				this.directory = directory;
-			}
-		}
-
-		@Override
-		public Result createOutput(String namespaceUri, String suggestedFileName)
-				throws IOException {
-			File file = new File(this.directory, this.schemaName);
-			StreamResult result = new StreamResult(file);
-			result.setSystemId(file.toURI().toURL().toString());
-			if (debug)
-				System.out.println(file.toURI().toURL().toString());
-			return result;
-		}
-
-		/**
-		 * Get the schema file
-		 * 
-		 * @return
-		 */
-		public File schemaFile() {
-			return new File(this.directory, this.schemaName);
-		}
-	}
-
-	/**
-	 * This implementation of {@link SchemaOutputResolver} is only for virtual
-	 * working, where the schema is not needed afterwards
-	 * 
-	 * @author alessandro.giusa@valeo.com, SBX1322
-	 * 
-	 */
-	public class SchemaStringBufferResolver extends SchemaOutputResolver {
-
-		private StringWriter buffer;
-
-		@Override
-		public Result createOutput(String namespaceUri, String suggestedFileName)
-				throws IOException {
-			buffer = new StringWriter();
-			StreamResult result = new StreamResult(buffer);
-			result.setSystemId("");
-			return result;
-		}
-
-		public StringWriter getBuffer() {
-			return buffer;
-		}
-	}
-
-	/**
 	 * Get new instance of {@link JAXBEngine}. Client should take care of the
 	 * instace
-	 * 
+	 *
 	 * @return
 	 */
 	public static JAXBEngine getInstance() {
 		return new JAXBEngine();
 	}
 
-	/** instance of this class, Singleton */
-	private static JAXBEngine INSTANCE;
-
 	/**
 	 * Get an instance of the JAXBEngine ->Singleton. Each call of this method,
 	 * will bring the same object
-	 * 
+	 *
 	 * @return
 	 */
 	public static JAXBEngine getSingleTon() {
-		if (INSTANCE == null) {
-			INSTANCE = new JAXBEngine();
+		if (jaxbEngineInstance == null) {
+			jaxbEngineInstance = new JAXBEngine();
 		}
-		return INSTANCE;
+		return jaxbEngineInstance;
 	}
 
 	/**
 	 * Kill the internal instance
 	 */
 	public static void kill() {
-		INSTANCE = null;
-	}
-
-	private JAXBEngine() {
+		jaxbEngineInstance = null;
 	}
 
 	/**
 	 * Create a {@link SchemaFileResolver#SchemaResolver(String, String)}
-	 * 
+	 *
 	 * @param namespaceUri
 	 * @param suggestedFileName
 	 * @return
 	 */
-	private SchemaFileResolver getSchemaRessolver(String namespaceUri,
-			String suggestedFileName) {
-		SchemaFileResolver schemaRes = new SchemaFileResolver(namespaceUri,
+	private SchemaFileResolver getSchemaRessolver(final String namespaceUri,
+			final String suggestedFileName) {
+		final SchemaFileResolver schemaRes = new SchemaFileResolver(namespaceUri,
 				suggestedFileName);
 		return schemaRes;
 	}
 
 	/**
 	 * Write the obj to xml by using the given schema
-	 * 
+	 *
 	 * @param obj
 	 *            object which should be persist to xml
 	 * @param clazz
@@ -194,30 +115,31 @@ public class JAXBEngine {
 	 *            output file name
 	 * @return true if the write process was okay
 	 */
-	public boolean write(Object obj, File fileSchema, String outputFilename,
-			Class... classes) {
+	public boolean write(final Object obj, final File fileSchema, final String outputFilename,
+			final Class<?>... classes) {
 		try {
 			this.checkFiles(fileSchema);
-			JAXBContext context = JAXBContext.newInstance(classes);
-			Marshaller ms = context.createMarshaller();
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final Marshaller ms = context.createMarshaller();
 			ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			SchemaFactory sf = SchemaFactory
+			final SchemaFactory sf = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			if (debug)
+			if (this.debug) {
 				System.out.println(fileSchema.getAbsolutePath());
-			Schema schema = sf.newSchema(fileSchema);
+			}
+			final Schema schema = sf.newSchema(fileSchema);
 			ms.setSchema(schema);
 			ms.marshal(obj, new FileOutputStream(outputFilename, false));
 			return true;
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
-		} catch (PropertyException e) {
+		} catch (final PropertyException e) {
 			e.printStackTrace();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -227,34 +149,34 @@ public class JAXBEngine {
 	 * Write the given classes into the provided node. A schema file will be
 	 * generated temperately in the location of eclipse platform with the name
 	 * tempschema.xsd
-	 * 
+	 *
 	 * @param obj
 	 * @param node
 	 * @param classes
 	 * @return true, if the write process was successfully
 	 */
-	public boolean write(Object obj, File fileSchema, Node node,
-			Class... classes) {
+	public boolean write(final Object obj, final File fileSchema, final Node node,
+			final Class<?>... classes) {
 		try {
 			this.checkFiles(fileSchema);
-			JAXBContext context = JAXBContext.newInstance(classes);
-			Marshaller ms = context.createMarshaller();
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final Marshaller ms = context.createMarshaller();
 			ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			SchemaFactory sf = SchemaFactory
+			final SchemaFactory sf = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = sf.newSchema(fileSchema);
+			final Schema schema = sf.newSchema(fileSchema);
 			ms.setSchema(schema);
 			ms.marshal(obj, node);
 			return true;
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
-		} catch (PropertyException e) {
+		} catch (final PropertyException e) {
 			e.printStackTrace();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -264,25 +186,25 @@ public class JAXBEngine {
 	 * Write the given classes into the provided node. A schema file will be
 	 * generated temperately in the location of eclipse platform with the name
 	 * tempschema.xsd
-	 * 
+	 *
 	 * @param obj
 	 * @param node
 	 * @param classes
 	 * @return true, if the write process was successfully
 	 */
-	public boolean write(Object obj, Node node, Class... classes) {
+	public boolean write(final Object obj, final Node node, final Class<?>... classes) {
 		try {
-			JAXBContext context = JAXBContext.newInstance(classes);
-			Marshaller ms = context.createMarshaller();
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final Marshaller ms = context.createMarshaller();
 			ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			ms.setSchema(this.createSchema(context));
 			ms.marshal(obj, node);
 			return true;
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
-		} catch (PropertyException e) {
+		} catch (final PropertyException e) {
 			e.printStackTrace();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -290,31 +212,31 @@ public class JAXBEngine {
 
 	/**
 	 * Get the given object based on the classes back as {@link XML}
-	 * 
+	 *
 	 * @param obj
 	 * @param classes
 	 * @return
 	 */
-	public XML write(Object obj, Class... classes) {
+	public XML write(final Object obj, final Class<?>... classes) {
 		try {
 			JAXBContext context = null;
-			if (classes == null || classes.length == 0) {
+			if ((classes == null) || (classes.length == 0)) {
 				context = JAXBContext.newInstance(obj.getClass());
 			} else {
 				context = JAXBContext.newInstance(classes);
 			}
 
-			Marshaller ms = context.createMarshaller();
+			final Marshaller ms = context.createMarshaller();
 			ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			ms.setSchema(this.createSchema(context));
-			XML xml = XML.newInstance();
+			final XML xml = XML.newInstance();
 			ms.marshal(obj, xml.getDocument());
 			return xml;
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
-		} catch (PropertyException e) {
+		} catch (final PropertyException e) {
 			e.printStackTrace();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -322,51 +244,51 @@ public class JAXBEngine {
 
 	/**
 	 * Write the object to the console
-	 * 
+	 *
 	 * @param obj
 	 * @param node
 	 * @param classes
 	 * @return true, if the write process was successfully
 	 */
-	public boolean write(Object obj, OutputStream out, Class... classes) {
+	public boolean write(final Object obj, final OutputStream out, final Class<?>... classes) {
 		try {
-			JAXBContext context = JAXBContext.newInstance(classes);
-			Marshaller ms = context.createMarshaller();
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final Marshaller ms = context.createMarshaller();
 			ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			ms.setSchema(this.createSchema(context));
 			ms.marshal(obj, out);
 			return true;
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
-		} catch (PropertyException e) {
+		} catch (final PropertyException e) {
 			e.printStackTrace();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Write the object to the console
-	 * 
+	 *
 	 * @param obj
 	 * @param node
 	 * @param classes
 	 * @return true, if the write process was successfully
 	 */
-	public boolean write(Object obj, Writer writer, Class... classes) {
+	public boolean write(final Object obj, final Writer writer, final Class<?>... classes) {
 		try {
-			JAXBContext context = JAXBContext.newInstance(classes);
-			Marshaller ms = context.createMarshaller();
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final Marshaller ms = context.createMarshaller();
 			ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			ms.setSchema(this.createSchema(context));
 			ms.marshal(obj, writer);
 			return true;
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
-		} catch (PropertyException e) {
+		} catch (final PropertyException e) {
 			e.printStackTrace();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -374,22 +296,22 @@ public class JAXBEngine {
 
 	/**
 	 * Read the xml passed as string
-	 * 
+	 *
 	 * @param xml
 	 *            string with xml
 	 * @param classes
 	 * @return
 	 */
-	public Object read(String xml, Class... classes) {
-		if (xml != null && !xml.isEmpty()) {
+	public Object read(final String xml, final Class<?>... classes) {
+		if ((xml != null) && !xml.isEmpty()) {
 			try {
-				JAXBContext context = JAXBContext.newInstance(classes);
-				Unmarshaller unm = context.createUnmarshaller();
+				final JAXBContext context = JAXBContext.newInstance(classes);
+				final Unmarshaller unm = context.createUnmarshaller();
 				unm.setSchema(this.createSchema(context));
 				return unm.unmarshal(new StringReader(xml));
-			} catch (JAXBException e) {
+			} catch (final JAXBException e) {
 				e.printStackTrace();
-			} catch (NullPointerException e) {
+			} catch (final NullPointerException e) {
 				e.printStackTrace();
 			}
 		}
@@ -398,22 +320,22 @@ public class JAXBEngine {
 
 	/**
 	 * Read the xml passed as string
-	 * 
+	 *
 	 * @param xml
 	 *            string with xml
 	 * @param classes
 	 * @return
 	 */
-	public Object read(File xml, Class... classes) {
-		if (xml != null && xml.exists()) {
+	public Object read(final File xml, final Class<?>... classes) {
+		if ((xml != null) && xml.exists()) {
 			try {
-				JAXBContext context = JAXBContext.newInstance(classes);
-				Unmarshaller unm = context.createUnmarshaller();
+				final JAXBContext context = JAXBContext.newInstance(classes);
+				final Unmarshaller unm = context.createUnmarshaller();
 				unm.setSchema(this.createSchema(context));
 				return unm.unmarshal(xml);
-			} catch (JAXBException e) {
+			} catch (final JAXBException e) {
 				e.printStackTrace();
-			} catch (NullPointerException e) {
+			} catch (final NullPointerException e) {
 				e.printStackTrace();
 			}
 		}
@@ -422,7 +344,7 @@ public class JAXBEngine {
 
 	/**
 	 * Read xml to object of type which is passed in by using the passed schema
-	 * 
+	 *
 	 * @param filexml
 	 *            xml which should be get into object
 	 * @param fileSchema
@@ -431,26 +353,27 @@ public class JAXBEngine {
 	 *            type of the object which should be created
 	 * @return the main object based on xml and schema
 	 */
-	public Object read(File filexml, File fileSchema, Class... classes) {
+	public Object read(final File filexml, final File fileSchema, final Class<?>... classes) {
 		try {
 			this.checkFiles(filexml, fileSchema);
-			JAXBContext context = JAXBContext.newInstance(classes);
-			Unmarshaller unm = context.createUnmarshaller();
-			SchemaFactory sf = SchemaFactory
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final Unmarshaller unm = context.createUnmarshaller();
+			final SchemaFactory sf = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			if (debug)
+			if (this.debug) {
 				System.out.println(fileSchema.getAbsolutePath());
-			Schema schema = sf.newSchema(fileSchema);
+			}
+			final Schema schema = sf.newSchema(fileSchema);
 			unm.setSchema(schema);
-			Object obj = unm.unmarshal(filexml);
+			final Object obj = unm.unmarshal(filexml);
 			return obj;
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -458,29 +381,27 @@ public class JAXBEngine {
 
 	/**
 	 * Check whether the files are available or not
-	 * 
+	 *
 	 * @param files
 	 * @throws FileNotFoundException
 	 */
-	private void checkFiles(File... files) throws FileNotFoundException,
+	private void checkFiles(final File... files) throws FileNotFoundException,
 			NullPointerException {
-		if (files != null && files.length > 0) {
-			File[] myFiles = files.clone();
-			for (File itrFile : myFiles) {
-				if (!itrFile.exists()) {
+		if ((files != null) && (files.length > 0)) {
+			final File[] myFiles = files.clone();
+			for (final File itrFile : myFiles) {
+				if (!itrFile.exists())
 					throw new FileNotFoundException("The file:"
 							+ itrFile.getAbsolutePath() + " is not available?");
-				}
 			}
-		} else {
+		} else
 			throw new NullPointerException("the given files are null or empty");
-		}
 	}
 
 	/**
 	 * Create a schema file based on clazz passed in. The schema consider all
 	 * complex types in the class. The whole hierarchy
-	 * 
+	 *
 	 * @param parentPath
 	 *            parent path of schema. if "" or null, the current place of
 	 *            thread is taken
@@ -492,16 +413,16 @@ public class JAXBEngine {
 	 * @return the file of the schema, this can be used as input for other
 	 *         methods of this class
 	 */
-	public File createSchema(String parentPath, String schemaName,
-			Class... classes) {
+	public File createSchema(final String parentPath, final String schemaName,
+			final Class<?>... classes) {
 		try {
-			JAXBContext context = JAXBContext.newInstance(classes);
-			SchemaFileResolver sr = getSchemaRessolver(parentPath, schemaName);
+			final JAXBContext context = JAXBContext.newInstance(classes);
+			final SchemaFileResolver sr = this.getSchemaRessolver(parentPath, schemaName);
 			context.generateSchema(sr);
 			return sr.schemaFile();
-		} catch (JAXBException e) {
+		} catch (final JAXBException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -510,25 +431,25 @@ public class JAXBEngine {
 	/**
 	 * Create a {@link Schema} file in a virtual {@link StringWriter} /
 	 * {@link StringReader}
-	 * 
+	 *
 	 * @param context
 	 * @return
 	 */
-	public Schema createSchema(JAXBContext context) {
+	public Schema createSchema(final JAXBContext context) {
 		try {
-			SchemaStringBufferResolver sr = new SchemaStringBufferResolver();
+			final SchemaStringBufferResolver sr = new SchemaStringBufferResolver();
 			context.generateSchema(sr);
-			SchemaFactory sf = SchemaFactory
+			final SchemaFactory sf = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			StringWriter writer = sr.getBuffer();
-			StringReader reader = new StringReader(writer.getBuffer()
+			final StringWriter writer = sr.getBuffer();
+			final StringReader reader = new StringReader(writer.getBuffer()
 					.toString());
-			StreamSource source = new StreamSource(reader);
-			Schema schema = sf.newSchema(source);
+			final StreamSource source = new StreamSource(reader);
+			final Schema schema = sf.newSchema(source);
 			return schema;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -536,36 +457,125 @@ public class JAXBEngine {
 
 	/**
 	 * Generate java-files based on the passed schema into
-	 * 
+	 *
 	 * @param packagename
 	 * @param destdir
 	 * @param fileschema
 	 * @return
 	 */
-	public boolean generateClasses(String packagename, File destdir,
-			File fileschema) {
+	public boolean generateClasses(final String packagename, final File destdir,
+			final File fileschema) {
 		if (destdir.exists() && fileschema.exists()) {
-			if (debug)
+			if (this.debug) {
 				System.out.println("creating files in directory "
 						+ destdir.getAbsoluteFile() + " whith schema "
 						+ fileschema.getAbsolutePath());
+			}
 			try {
-				String command = "xjc -p " + packagename + " -d "
+				final String command = "xjc -p " + packagename + " -d "
 						+ destdir.getAbsolutePath() + " "
 						+ fileschema.getAbsolutePath();
-				if (debug)
+				if (this.debug) {
 					System.out.println("com: " + command);
+				}
 				Runtime.getRuntime().exec(command);
 				return true;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 			return false;
 		}
-		if (debug)
+		if (this.debug) {
 			System.out.println("directory " + destdir.getAbsoluteFile()
 					+ " OR schema " + fileschema.getAbsolutePath()
 					+ " doesn't exist!");
+		}
 		return false;
+	}
+
+	/**
+	 * Resolve the {@link SchemaOutputResolver}
+	 *
+	 * @author alessandro.giusa@valeo.com, SBX1322
+	 *
+	 */
+	private class SchemaFileResolver extends SchemaOutputResolver {
+
+		private String schemaName;
+		private String directory;
+
+		/**
+		 * Create an instance of a {@link SchemaFileResolver}
+		 *
+		 * @param directory
+		 *            parent path of schema name
+		 * @param schemaName
+		 *            only the filename of the schema which should be created
+		 *            with the extension .xsd
+		 */
+		public SchemaFileResolver(final String directory, final String schemaName) {
+			super();
+			if (!schemaName.contains(".")) {
+				this.schemaName += ".xsd";
+			} else {
+				this.schemaName = schemaName;
+			}
+
+			if ((directory == null) || directory.isEmpty()) {
+				this.directory = ".";
+			} else {
+				this.directory = directory;
+			}
+		}
+
+		@Override
+		public Result createOutput(final String namespaceUri, final String suggestedFileName)
+				throws IOException {
+			final File file = new File(this.directory, this.schemaName);
+			final StreamResult result = new StreamResult(file);
+			result.setSystemId(file.toURI().toURL().toString());
+			if (JAXBEngine.this.debug) {
+				System.out.println(file.toURI().toURL().toString());
+			}
+			return result;
+		}
+
+		/**
+		 * Get the schema file
+		 *
+		 * @return
+		 */
+		public File schemaFile() {
+			return new File(this.directory, this.schemaName);
+		}
+	}
+
+	/**
+	 * This implementation of {@link SchemaOutputResolver} is only for virtual
+	 * working, where the schema is not needed afterwards
+	 *
+	 * @author alessandro.giusa@valeo.com, SBX1322
+	 *
+	 */
+	public class SchemaStringBufferResolver extends SchemaOutputResolver {
+
+		private StringWriter buffer;
+
+		public SchemaStringBufferResolver() {
+			super();
+		}
+
+		@Override
+		public Result createOutput(final String namespaceUri, final String suggestedFileName)
+				throws IOException {
+			this.buffer = new StringWriter();
+			final StreamResult result = new StreamResult(this.buffer);
+			result.setSystemId("");
+			return result;
+		}
+
+		public StringWriter getBuffer() {
+			return this.buffer;
+		}
 	}
 }
