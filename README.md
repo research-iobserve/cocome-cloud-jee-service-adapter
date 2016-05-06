@@ -73,7 +73,7 @@ problems. You may consult the server logs and your settings file.
   not delete all necessary files for undeployment. You may repair this
   as follows:
   - stop your Glassfish server
-  - go to ${GLASSFISH_HOME}/glassfish/domains/${YOUR_DOMAIN} directory
+  - go to `${GLASSFISH_HOME}/glassfish/domains/${YOUR_DOMAIN}` directory
   - delete all directories which correspond with your deployment
   - You must also check the `__internal` directory
   - Find the `domain.xml` or `config.xml` and remove references to the
