@@ -5,11 +5,11 @@
 	id="Application_ID" version="6">
 	<display-name>service-adapter-ear</display-name>
 	<module>
-		<ejb>service-adapter-ejb.jar</ejb>
+		<ejb>service-adapter-ejb-1.1.jar</ejb>
 	</module>
 	<module>
 		<web>
-			<web-uri>service-adapter-rest.war</web-uri>
+			<web-uri>service-adapter-rest-1.1.war</web-uri>
 			<context-root>/de.kit.ipd.cocome.cloud.serviceadapter</context-root>
 		</web>
 	</module>
