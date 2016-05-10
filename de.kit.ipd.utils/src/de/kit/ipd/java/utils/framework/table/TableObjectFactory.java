@@ -11,7 +11,7 @@ import javax.xml.namespace.QName;
  *
  */
 @XmlRegistry
-public class TableObjectFactory {
+public class TableObjectFactory<T> {
 
 	private static final QName TABLE_QNAME = new QName("", "Table");
 	private static final QName HEADER_QNAME = new QName("", "Header");
@@ -20,12 +20,12 @@ public class TableObjectFactory {
 
 	public TableObjectFactory() {}
 
-	public Table createTable() {
-		return new Table();
+	public Table<T> createTable() {
+		return new Table<T>();
 	}
 
 	@XmlElementDecl(namespace = "", name = "Table")
-	public JAXBElement createTable(final Table value) {
+	public JAXBElement<Table> createTable(final Table value) {
 		return new JAXBElement<Table>(TABLE_QNAME, Table.class, null, value);
 	}
 
@@ -34,12 +34,12 @@ public class TableObjectFactory {
 	}
 
 	@XmlElementDecl(namespace = "", name = "Header")
-	public JAXBElement createTableHeader(final TableHeader value) {
+	public JAXBElement<TableHeader> createTableHeader(final TableHeader value) {
 		return new JAXBElement<TableHeader>(HEADER_QNAME, TableHeader.class, null, value);
 	}
 
-	public Row createRow() {
-		return new Row();
+	public Row<T> createRow() {
+		return new Row<T>();
 	}
 
 	@XmlElementDecl(namespace = "", name = "Row")
@@ -47,8 +47,8 @@ public class TableObjectFactory {
 		return new JAXBElement<Row>(ROW_QNAME, Row.class, null, value);
 	}
 
-	public Column createColumn() {
-		return new Column();
+	public Column<T> createColumn() {
+		return new Column<T>();
 	}
 
 	@XmlElementDecl(namespace = "", name = "Column")

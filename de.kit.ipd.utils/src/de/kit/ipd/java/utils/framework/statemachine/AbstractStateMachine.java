@@ -48,14 +48,11 @@ public abstract class AbstractStateMachine<T> implements IStateMachine<T> {
 	}
 
 	@Override
-	public void add(final IState<T>... additionalStates) {
-		if (additionalStates != null) {
-			for (final IState<T> nextState : additionalStates) {
-				this.states.put(nextState.getIndex(), nextState);
-			}
-			return;
-		}
-		throw new IllegalArgumentException("list of states empty or null");
+	public void add(final IState<T> state) {
+		if (state != null) {
+			this.states.put(this.states.size(), state);
+		} else
+			throw new IllegalArgumentException("list of states empty or null");
 	}
 
 	/**

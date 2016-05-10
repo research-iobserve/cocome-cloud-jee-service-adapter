@@ -126,12 +126,6 @@ public class QueryParser implements IParser<String>, ILexerVisitor<CharSequence>
 	}
 
 	@Override
-	public void addVisitor(final IParserVisitor... visitors) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public String toString() {
 		return super.toString();
 	}
@@ -160,5 +154,11 @@ public class QueryParser implements IParser<String>, ILexerVisitor<CharSequence>
 
 	private void buildQuery() {
 		this.strQuery = this.query.parse(this.map);
+	}
+
+	@Override
+	public void addVisitor(final IParserVisitor<String> visitor) {
+		// TODO Auto-generated method stub
+
 	}
 }

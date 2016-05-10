@@ -14,32 +14,32 @@ import de.kit.ipd.java.utils.framework.statemachine.IStateMachine;
  * @author unknown
  *
  */
-public class CSVLexer implements ILexer {
+public class CSVLexer implements ILexer<CharSequence> {
 
 	/*************************************************************************
 	 * STATIC
 	 *************************************************************************/
 
-	public static final IState STATE_0 = new State0();
+	public static final IState<CharSequence> STATE_0 = new State0();
 
-	public static final IState STATE_1 = new State1();
+	public static final IState<CharSequence> STATE_1 = new State1();
 
-	public static final IState STATE_2 = new State2();
+	public static final IState<CharSequence> STATE_2 = new State2();
 
-	public static final IState STATE_3 = new State3();
+	public static final IState<CharSequence> STATE_3 = new State3();
 
-	public static final IState STATE_4 = new State4();
+	public static final IState<CharSequence> STATE_4 = new State4();
 
-	public static final IState STATE_5 = new State5();
+	public static final IState<CharSequence> STATE_5 = new State5();
 
-	public static final IState STATE_6 = new State6();
+	public static final IState<CharSequence> STATE_6 = new State6();
 
 	/*************************************************************************
 	 * FIELDS
 	 *************************************************************************/
 
 	/** State-Machine which doese the scanning of the source */
-	private final IStateMachine machine = new CharStreamStateMachine();
+	private final IStateMachine<CharSequence> machine = new CharStreamStateMachine();
 
 	/*************************************************************************
 	 * CONSTRUCTOR
@@ -61,12 +61,12 @@ public class CSVLexer implements ILexer {
 	 *************************************************************************/
 
 	@Override
-	public IStateMachine getMachine() {
+	public IStateMachine<CharSequence> getMachine() {
 		return this.machine;
 	}
 
 	@Override
-	public void addVisitor(final ILexerVisitor visitor) {
+	public void addVisitor(final ILexerVisitor<CharSequence> visitor) {
 		this.machine.addVisitor(visitor);
 	}
 
@@ -78,7 +78,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 0
 	 *************************************************************************/
 
-	public static class State0 implements IState {
+	public static class State0 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 0;
 
@@ -95,7 +95,7 @@ public class CSVLexer implements ILexer {
 		public State0() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 
 			final String next = String.valueOf(machine.getNext());
 
@@ -134,7 +134,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 1
 	 *************************************************************************/
 
-	public static class State1 implements IState {
+	public static class State1 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 1;
 
@@ -151,7 +151,7 @@ public class CSVLexer implements ILexer {
 		public State1() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 
 			final String next = String.valueOf(machine.getNext());
 
@@ -190,7 +190,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 2
 	 *************************************************************************/
 
-	public static class State2 implements IState {
+	public static class State2 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 2;
 
@@ -207,7 +207,7 @@ public class CSVLexer implements ILexer {
 		public State2() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 
 			final String next = String.valueOf(machine.getNext());
 
@@ -246,7 +246,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 3
 	 *************************************************************************/
 
-	public static class State3 implements IState {
+	public static class State3 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 3;
 
@@ -259,7 +259,7 @@ public class CSVLexer implements ILexer {
 		public State3() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 
 			final String next = String.valueOf(machine.getNext());
 
@@ -290,7 +290,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 4
 	 *************************************************************************/
 
-	public static class State4 implements IState {
+	public static class State4 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 4;
 
@@ -298,7 +298,7 @@ public class CSVLexer implements ILexer {
 		public State4() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 			machine.callVisitor(this.getIndex(), machine.getToken());
 			machine.resetToken();
 			machine.setNextState(1);
@@ -314,7 +314,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 5
 	 *************************************************************************/
 
-	public static class State5 implements IState {
+	public static class State5 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 5;
 
@@ -322,7 +322,7 @@ public class CSVLexer implements ILexer {
 		public State5() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 			machine.callVisitor(this.getIndex(), machine.getToken());
 			machine.resetToken();
 			machine.setNextState(0);
@@ -338,7 +338,7 @@ public class CSVLexer implements ILexer {
 	 * STATE 6
 	 *************************************************************************/
 
-	public static class State6 implements IState {
+	public static class State6 implements IState<CharSequence> {
 		/** Index of State */
 		public static final int INDEX = 6;
 
@@ -346,7 +346,7 @@ public class CSVLexer implements ILexer {
 		public State6() {}
 
 		@Override
-		public void run(final IStateMachine machine) {
+		public void run(final IStateMachine<CharSequence> machine) {
 			machine.callVisitor(this.getIndex(), machine.getToken());
 			machine.resetToken();
 			machine.setNextState(1);

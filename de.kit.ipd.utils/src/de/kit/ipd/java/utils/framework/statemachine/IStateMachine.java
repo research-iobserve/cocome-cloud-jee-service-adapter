@@ -13,7 +13,7 @@ public interface IStateMachine<T> {
 
 	void setInput(T input);
 
-	void add(IState<T>... states);
+	void add(IState<T> state);
 
 	void run(int state);
 

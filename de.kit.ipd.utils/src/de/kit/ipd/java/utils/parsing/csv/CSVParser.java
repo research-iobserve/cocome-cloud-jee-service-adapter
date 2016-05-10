@@ -37,7 +37,7 @@ public class CSVParser implements IParser<Table<String>>, ILexerVisitor<CharSequ
 
 	private int rowCounter = 0;
 
-	private Table<String> table = new Table<>();
+	private Table<String> table = new Table<String>();
 
 	private final List<TableHeader> header = new ArrayList<TableHeader>();
 
@@ -118,7 +118,7 @@ public class CSVParser implements IParser<Table<String>>, ILexerVisitor<CharSequ
 	}
 
 	@Override
-	public void addVisitor(final IParserVisitor... visitors) {
+	public void addVisitor(final IParserVisitor<Table<String>> visitor) {
 		// TODO Auto-generated method stub
 
 	}

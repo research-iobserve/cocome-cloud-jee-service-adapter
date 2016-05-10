@@ -19,6 +19,6 @@ public interface IParser<M> {
 
 	public void setModel(M model);
 
-	public void addVisitor(IParserVisitor... visitors);
+	public void addVisitor(IParserVisitor<M> visitor);
 
 }
