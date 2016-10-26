@@ -66,6 +66,7 @@
 							<cargo.remote.password>${serviceadapter.password}</cargo.remote.password>
 							<cargo.glassfish.admin.port>${serviceadapter.adminPort}</cargo.glassfish.admin.port>
 							<cargo.glassfish.domain.name>${serviceadapter.domain}</cargo.glassfish.domain.name>
+							<cargo.protocol>https</cargo.protocol>
 						</properties>
 					</configuration>
 					<deployables>
